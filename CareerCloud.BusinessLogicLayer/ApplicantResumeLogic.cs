@@ -1,0 +1,54 @@
+﻿using CareerCloud.DataAccessLayer;
+using CareerCloud.Pocos;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CareerCloud.BusinessLogicLayer
+{
+    public class ApplicantResumeLogic : BaseLogic<ApplicantResumePoco>
+    {
+        
+        public ApplicantResumeLogic(IDataRepository<ApplicantResumePoco> repository) : base(repository)
+        {
+        }
+        protected override void Verify(ApplicantResumePoco[] pocos)
+        {
+            List<ValidationException> exceptions = new List<ValidationException>();
+            foreach (ApplicantResumePoco poco in pocos)
+            {
+
+               
+           if (string.IsNullOrEmpty(poco.Resume))
+                    {
+                    exceptions.Add(new ValidationException(113, "Resume for ApplicantResume {poco.Id} is required....fix it!"));
+                }
+            }
+
+            if (exceptions.Count > 0)
+            {
+                throw new AggregateException(exceptions);
+            }
+        }
+        public override void Add(ApplicantResumePoco[] pocos)
+        {
+            Verify(pocos);
+            base.Add(pocos);
+
+        }
+
+        private void Verify()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update(ApplicantResumePoco[] pocos)
+        {
+            Verify(pocos);
+            base.Update(pocos);
+        }
+
+    }
+}
+
+
